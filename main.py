@@ -1,5 +1,11 @@
-from flask import Flask, jsonify
-import os
+from flask import Flask, jsonify,Response, request
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
+import re,struct, sys, os, time,requests,logging
+logging.basicConfig(filename = "logfile.log",
+                    filemode = "w",
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
 
 app = Flask(__name__)
 
