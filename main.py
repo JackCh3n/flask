@@ -41,4 +41,6 @@ def page_not_found(error):
     return jsonify({'code':404,'msg':'not find'})
 
 if __name__ == '__main__':
+    print('PORT',os.getenv("PORT",default=5000))
+    print('PORT',os.environ.get("PORT"))
     app.run(debug=True, port=os.getenv("PORT", default=5000))
