@@ -9,11 +9,36 @@ logging.basicConfig(filename = "logfile.log",
 
 app = Flask(__name__)
 
-
+if os.environ.get("TOKEN"):
+    updater = Updater(os.environ.get("TOKEN"), use_context=True)
+else:
+    REQUEST_KWARGS={
+        'proxy_url': 'http://127.0.0.1:10809',
+    }
+    updater = Updater('', use_context=True, request_kwargs=REQUEST_KWARGS)
+# 首页
 @app.route('/')
 def index():
-    return jsonify({"Choo Choo": "Welcome to your Flask app 🚅"})
+    return jsonify({'code':200,'msg':'hello word'})
 
+# 推送
+@app.route('/u/<path:users>/t/<path:texts>', methods=['POST'])
+def message_push(texts,users):
+    if not texts and not users:
+        return jsonify({'code':404,'msg':'not find'})
+    print(texts,users)
+    updater.bot.send_message(text=texts, chat_id=users)
+    return jsonify({'code':200})
+
+# ip
+@app.route('/ip', methods=['GET'])
+def ip():
+    return Response(request.remote_addr, mimetype="text/text")
+
+# 404
+@app.errorhandler(404)
+def page_not_found(error):
+    return jsonify({'code':404,'msg':'not find'})
 
 if __name__ == '__main__':
     app.run(debug=True, port=os.getenv("PORT", default=5000))
